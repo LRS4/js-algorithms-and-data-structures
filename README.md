@@ -1,4 +1,4 @@
-# Solutions to freeCodeCamp's JavaScript Algorithms and Data Structures Certification
+# freeCodeCamp's JavaScript Algorithms and Data Structures Certification
 
 ## Basic JavaScript
 
