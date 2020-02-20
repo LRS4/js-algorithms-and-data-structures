@@ -1,4 +1,4 @@
-// ES6 Use the Rest Parameter with Function Parameters
+// Use the Rest Parameter with Function Parameters
 
 const sum = (...args) => {
   return args.reduce(function(sum, value) {
