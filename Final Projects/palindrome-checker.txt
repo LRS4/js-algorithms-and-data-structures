@@ -1,0 +1,20 @@
+function palindrome(str) {
+  // remove all puntuation and spaces, and drop to lowercase
+  let newStr = str.replace(/[^\w]|_/g, "").toLowerCase();
+  for (let start = 0, end = newStr.length - 1; start < end / 2; start++) {
+    if (newStr[start] !== newStr[end - start]) {
+      return false;
+    }
+  }
+  return true
+}
+
+palindrome("eye"); // Returns true
+
+palindrome("A man, a plan, a canal. Panama"); // Returns true
+
+palindrome("0_0 (: /-\ :) 0-0"); // Returns true
+
+palindrome("not a palindrome"); // // Returns false
+
+palindrome("almostomla");

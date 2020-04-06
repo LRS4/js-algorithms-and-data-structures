@@ -1,0 +1,19 @@
+function rot13(str) {
+  let regex = /[A-Z]/
+  return str.split("").map((letter, index) => {
+    if (regex.test(letter)) {
+      let cipher = (((str.charCodeAt(index) - 65 + 13) % 26) + 65);
+      return String.fromCharCode(cipher);
+    } else {
+      return letter;
+    }
+  })
+  .join("");
+}
+
+rot13("SERR PBQR PNZC");
+console.log(rot13("SERR PBQR PNZC"));
+// Returns 'FREE CODE CAMP'
+
+console.log(rot13("SERR CVMMN!"));
+// Returns 'FREE PIZZA!'

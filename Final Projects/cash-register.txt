@@ -1,0 +1,79 @@
+function checkCashRegister(price, cash, cid) {
+
+  // CREATE DRAWER
+  let drawer = cid.map(unit => ({
+    name : unit[0],
+    value : unit[0] == "PENNY" ? 0.01 
+      : unit[0] == "NICKEL" ? 0.05
+      : unit[0] == "DIME" ? 0.1
+      : unit[0] == "QUARTER" ? 0.25
+      : unit[0] == "ONE" ? 1
+      : unit[0] == "FIVE" ? 5
+      : unit[0] == "TEN" ? 10
+      : unit[0] == "TWENTY" ? 20
+      : 100, 
+    tray : unit[1],
+    change: 0
+  }))
+  .sort((a, b) => b.value - a.value);
+
+  // CALCULATE TOTAL AMOUNT IN DRAWER
+  let totalCash = drawer
+  .map(obj => obj.tray)
+  .reduce((a, b) => a + b)
+  
+  var change; 
+  var changeRequired = cash - price;
+
+  // IF CASH-IN-DRAWER LESS THAN CHANGE DUE
+  if (totalCash < changeRequired) {
+    return {status: "INSUFFICIENT_FUNDS", change: []};
+  }
+
+  // CALCULATE CHANGE AND MARK OPEN / CLOSED
+  totalCash == changeRequired 
+  ? change = {status: "CLOSED", change: []}
+  : change = {status: "OPEN", change: []}
+
+  while (changeRequired > 0) {
+    for (let unit in drawer) {
+      let value = drawer[unit].value;
+      let tray = drawer[unit].tray;
+      // IF UNIT DIVISIBLE AND ENOUGH IN DRAWER GO FOR IT
+      if (value <= changeRequired && tray > 0) {
+        drawer[unit].change += value;
+        drawer[unit].tray -= value;
+        changeRequired -= value;
+
+        // Handle precision errors
+        drawer[unit].change = Math.round(drawer[unit].change * 100) / 100;
+        changeRequired = Math.round(changeRequired * 100) / 100;
+        break;
+      }
+    }
+  }
+
+  // IF CHANGE PROVIDED IS NOT ENOUGH
+  if (changeRequired > 0) {
+    return {status: "INSUFFICIENT_FUNDS", change: []};
+  }
+
+  // REGISTER AND ISSUE CHANGE
+  for (let unit in drawer) {
+    if (change.status == 'CLOSED') {
+      change.change.unshift([drawer[unit].name, drawer[unit].change]);
+    } else {
+      if (drawer[unit].change > 0) {
+      change.change.push([drawer[unit].name, drawer[unit].change]);
+      }
+    }
+  }
+
+  return change;
+}
+
+let test = checkCashRegister(19.5, 20, [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]])
+console.log(test);
+
+let testTwo = checkCashRegister(19.5, 20, [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 1], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]);
+console.log(testTwo);
